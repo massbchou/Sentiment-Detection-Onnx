@@ -11,13 +11,15 @@ from flask_ml.flask_ml_server.models import (
     InputType,
     ResponseBody,
     TaskSchema,
-    FileInput
+    FileInput,
 )
 from pathlib import Path
 import argparse
 import random
 import torch
+
 warnings.filterwarnings("ignore")
+
 
 # Configure UI Elements in RescueBox Desktop
 def create_transform_case_task_schema() -> TaskSchema:
@@ -25,7 +27,6 @@ def create_transform_case_task_schema() -> TaskSchema:
         key="input_dataset",
         label="Path to the input JSON file. Expected to contain a single array of strings",
         input_type=InputType.FILE,
-
     )
     output_schema = InputSchema(
         key="output_file",
@@ -34,9 +35,11 @@ def create_transform_case_task_schema() -> TaskSchema:
     )
     return TaskSchema(inputs=[input_schema, output_schema], parameters=[])
 
+
 class Inputs(TypedDict):
     input_dataset: FileInput
     output_file: DirectoryInput
+
 
 class Parameters(TypedDict):
     pass
@@ -48,10 +51,11 @@ server.add_app_metadata(
     name="Sentiment Detection Model",
     author="Umass Rescue",
     version="0.1.0",
-    info=load_file_as_string("img_info.md")
+    info=load_file_as_string("img_info.md"),
 )
 
 model = SentimentDetectionModel("distilbert.onnx")
+
 
 @server.route("/predict", task_schema_func=create_transform_case_task_schema)
 def give_prediction(inputs: Inputs, parameters: Parameters) -> ResponseBody:
@@ -60,12 +64,12 @@ def give_prediction(inputs: Inputs, parameters: Parameters) -> ResponseBody:
     out = str(out / (f"predictions_" + str(random.randint(0, 1000)) + ".csv"))
 
     res_list = model.predict_from_json(input_path)
-    with open(out, 'w') as f:
+    with open(out, "w") as f:
         writer = csv.DictWriter(f, fieldnames=["text", "sentiment"])
         writer.writeheader()
         for i in res_list:
             writer.writerow(i)
-    return ResponseBody(FileResponse(path=out,file_type="csv"))
+    return ResponseBody(FileResponse(path=out, file_type="csv"))
 
 
 if __name__ == "__main__":

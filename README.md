@@ -6,7 +6,7 @@
 Exporting the ONNX model involved the following key steps:
 1. Clone and set up the Sentiment Analysis repo found [here](https://github.com/Srikrushna221/Sentiment_Detection_From_Text). Follow instructions on README.md to get the predictions for the BERT model running.
 
-2. replace the first part of the 'helper' function in Sentiment_Detection_Models.py by.
+2. Replace the first part of the 'helper' function in Sentiment_Detection_Models.py by.
 ```python
         import torch
         device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
@@ -46,11 +46,7 @@ The resulting ONNX model will be saved as "distilbert.onnx" in root directory.
 ## Steps to use the sentiment detection model
 
 ### Create virtual environment and install dependencies
-Create a new virtual environment using any tool you prefer. I used venv
-
-```bash
-pipenv shell
-```
+Create a new virtual environment using any tool you prefer. I used venv. You can find resources on how to do this online.
 
 Install the dependencies using the following command:
 
